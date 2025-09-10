@@ -18,6 +18,7 @@ find_package(Qt6 REQUIRED COMPONENTS Quick)
 qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(appmush_app
+    model.cpp
     main.cpp
 )
 
@@ -32,6 +33,8 @@ qt_add_qml_module(appmush_app
     VERSION 1.0
     QML_FILES
         Main.qml
+        SOURCES
+        SOURCES model.h model.cpp
 )
 
 if(ANDROID)
