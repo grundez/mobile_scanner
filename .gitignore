@@ -1,0 +1,35 @@
+# Qt
+build*/
+*.pro.user
+*.autosave
+*.qrc
+
+# C++
+*.so
+*.a
+*.dll
+*.exe
+*.lib
+
+# Debug
+debug/
+release/
+
+# Build directories 
+android/
+build/
+tflite_headers/
+third-party/
+
+# Models
+*.tflite
+*.pt
+*.onnx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
