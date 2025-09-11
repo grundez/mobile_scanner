@@ -13,10 +13,12 @@
 #include <tensorflow/lite/model.h>
 #include <tensorflow/lite/kernels/register.h>
 
-class Model
+class Model : public QObject
 {
+    Q_OBJECT
+
 public:
-    Model();
+    explicit Model(QObject* parent = nullptr);
 
     bool loadModel(const QString& modelPath);
     QImage imageTransform(const QImage& frame);

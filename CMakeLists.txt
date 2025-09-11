@@ -13,7 +13,7 @@ include_directories(
 )
 
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Multimedia)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -39,6 +39,7 @@ qt_add_qml_module(appmush_app
 
 if(ANDROID)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=options")
+    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android")
     set(CMAKE_ANDROID_ARCH_ABI armeabi-v7a)
 
     add_library(tensorflowlite SHARED IMPORTED)
@@ -52,6 +53,7 @@ if(ANDROID)
     target_link_libraries(appmush_app PRIVATE
         tensorflowlite
         Qt6::Quick
+        Qt6::Multimedia
     )
     else()
         target_link_libraries(appmush_app PRIVATE Qt6::Quick)
@@ -68,6 +70,8 @@ set_target_properties(appmush_app PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
+set_property(TARGET appmush_app APPEND PROPERTY
+    QT_ANDROID_PACKAGE_PERMISSIONS "android.permission.CAMERA")
 
 include(GNUInstallDirs)
 install(TARGETS appmush_app

@@ -1,7 +1,7 @@
 #include "model.h"
 QImage::Format Model::Constants::imgFormat = QImage::Format_RGB888;
 
-Model::Model() {}
+Model::Model(QObject* parent) : QObject(parent) {}
 
 bool Model::loadModel(const QString& resourcePath)
 {
@@ -57,7 +57,7 @@ std::map<int, float> Model::frameProcessor(const QImage& frame)
     std::memcpy(mInput, inputFrame, transformed.sizeInBytes());
     TfLiteStatus status = mInterpreter->Invoke();
     if(status == kTfLiteOk){
-        processOutput();
+        return processOutput();
     }
 
     qDebug() << "Cannot make inference";
@@ -66,44 +66,6 @@ std::map<int, float> Model::frameProcessor(const QImage& frame)
 
 std::map<int, float> Model::processOutput()
 {
-    std::map<int, float> predictions;
-
-    if (!mOutput) {
-        qDebug() << "Output tensor is null!";
-        return predictions;
-    }
-
-    // Для YOLO: выходной тензор [1, 25, 8400]
-    const int numPredictions = 8400;
-    const int elementsPerPrediction = 25;
-
-    // Обработка всех предсказаний
-    for (int i = 0; i < numPredictions; i++) {
-        float* prediction = mOutput + i * elementsPerPrediction;
-        float confidence = prediction[4]; // confidence score
-
-        if (confidence < Constants::threshold) continue;
-
-        // Находим класс с максимальной вероятностью
-        int classId = 0;
-        float maxClassScore = 0;
-        for (int c = 0; c < 20; c++) { // 25 - 5 = 20 классов
-            float score = prediction[5 + c];
-            if (score > maxClassScore) {
-                maxClassScore = score;
-                classId = c;
-            }
-        }
-
-        // Фильтр по уверенности класса
-        if (maxClassScore < 0.5f) continue;
-
-        // Обновляем максимальный confidence для класса
-        float finalScore = confidence * maxClassScore;
-        if (predictions.find(classId) == predictions.end() || finalScore > predictions[classId]) {
-            predictions[classId] = finalScore;
-        }
-    }
-
-    return predictions;
+    // TODO: make data output processing
+    return {};
 }
